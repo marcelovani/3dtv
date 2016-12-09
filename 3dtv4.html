@@ -3,9 +3,9 @@
 <head>
 <title>Welcome to WebGL</title>
 
-<link rel="stylesheet" href="css/webglbook.css" />
-<script src="libs/Three.js"></script>
-<script src="libs/RequestAnimationFrame.js"></script>
+<link rel="stylesheet" href="themes/3dtv/css/webglbook.css" />
+<script src="themes/3dtv/libs/Three.js"></script>
+<script src="themes/3dtv/libs/RequestAnimationFrame.js"></script>
 	<script>
 	
 	var renderer = null,
@@ -84,8 +84,8 @@
 		// Create a group to hold our sun mesh and light
 		var sunGroup = new THREE.Object3D();
 
-		var SUNMAP = "images/lavatile.jpg";
-		var NOISEMAP = "images/cloud.png";
+		var SUNMAP = "themes/3dtv/images/lavatile.jpg";
+		var NOISEMAP = "themes/3dtv/images/cloud.png";
 		var uniforms = {
 
 				time: { type: "f", value: 1.0 },
@@ -127,9 +127,9 @@
 
 
 
-		var surfaceMap = THREE.ImageUtils.loadTexture( "images/earth_surface_2048.jpg" );
-		var normalMap = THREE.ImageUtils.loadTexture( "images/earth_normal_2048.jpg" );
-		var specularMap = THREE.ImageUtils.loadTexture( "images/earth_specular_2048.jpg" );
+		var surfaceMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_surface_2048.jpg" );
+		var normalMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_normal_2048.jpg" );
+		var specularMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_specular_2048.jpg" );
 
 		var shader = THREE.ShaderUtils.lib[ "normal" ],
 		uniforms = THREE.UniformsUtils.clone( shader.uniforms );
@@ -164,7 +164,7 @@
 
 
 	    // Create our clouds
-		var cloudsMap = THREE.ImageUtils.loadTexture( "images/earth_clouds_1024.png" );
+		var cloudsMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_clouds_1024.png" );
 		var cloudsMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: cloudsMap, transparent:true } );
 
 	    var cloudsGeometry = new THREE.SphereGeometry(0.205, 32, 32);
