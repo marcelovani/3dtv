@@ -3,240 +3,234 @@
 <head>
 <title>Welcome to WebGL</title>
 
-<link rel="stylesheet" href="themes/3dtv/css/webglbook.css" />
+<link rel="stylesheet" href="themes/3dtv/css/webglbook.css"/>
 <script src="themes/3dtv/libs/Three.js"></script>
 <script src="themes/3dtv/libs/RequestAnimationFrame.js"></script>
-	<script>
-	
-	var renderer = null,
-		scene = null, 
-		cameraLeft = null,
-		cameraRight = null,
-		objects = {},
-		zincrement = 0.01,
-		separation = -0.04300000000000005,
-		incrementation = 0.001,
-		animating = false;
-	
-	function onLoad()
-	{
-		// Grab our containers div
-        var container = document.getElementById("container");
+<script>
 
-        // Create the Three.js renderers, add them to our divs
-	    renderer = new THREE.WebGLRenderer( { antialias: true } );
-	    renderer.setClearColor(new THREE.Color().setRGB(0,0,0));
-	    renderer.setSize(container.offsetWidth, container.offsetHeight);
-	    container.appendChild( renderer.domElement );
+var renderer = null,
+	scene = null,
+	cameraLeft = null,
+	cameraRight = null,
+	objects = {},
+	zincrement = 0.01,
+	separation = -0.04300000000000005,
+	incrementation = 0.001,
+	animating = false;
 
-	    // Create a new Three.js scene
-	    scene = new THREE.Scene();
+function onLoad() {
+	// Grab our containers div
+	var container = document.getElementById( "container" );
 
-	    // Put in two cameras
-        cameraLeft = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
-        cameraLeft.position.set( 0, 0, 3 );
-        scene.add(cameraLeft);
+	// Create the Three.js renderers, add them to our divs
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	renderer.setClearColor( new THREE.Color().setRGB( 0, 0, 0 ) );
+	renderer.setSize( container.offsetWidth, container.offsetHeight );
+	container.appendChild( renderer.domElement );
 
-        cameraRight = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
-        cameraRight.position.set( 0, 0, 3 );
-        scene.add(cameraRight);
-        
-        iluminateSomething();
+	// Create a new Three.js scene
+	scene = new THREE.Scene();
 
-        drawSomething();
+	// Put in two cameras
+	cameraLeft = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
+	cameraLeft.position.set( 0, 0, 3 );
+	scene.add( cameraLeft );
 
-        addKeyHandler();
-        // Run our render loop
-        run();
-	}
+	cameraRight = new THREE.PerspectiveCamera( 45, (container.offsetWidth / 2) / container.offsetHeight, 1, 4000 );
+	cameraRight.position.set( 0, 0, 3 );
+	scene.add( cameraRight );
 
-	function run()
-	{
-		var width = Math.round(container.offsetWidth/2), 
-			height = container.offsetHeight;
-		// Render the scene
-		renderer.setViewport( 0, 0, width, height);
-		renderer.setScissor( 0, 0, width, height);
-		renderer.enableScissorTest ( true );
+	iluminateSomething();
 
-		cameraLeft.aspect = width * 2 / height;
-		cameraLeft.updateProjectionMatrix();
-		cameraLeft.position.set( separation, 0, 3 );
-		
-		renderer.render( scene, cameraLeft );
+	drawSomething();
 
-		renderer.setViewport( width, 0, width, height);
-		renderer.setScissor( width, 0, width, height);
-		renderer.enableScissorTest ( true );
+	addKeyHandler();
+	// Run our render loop
+	run();
+}
 
-		cameraRight.aspect = width * 2 / height;
-		cameraRight.updateProjectionMatrix();
-		cameraRight.position.set( -separation, 0, 3 );
-		
-		renderer.render( scene, cameraRight );
-		animateSomething();
-			
-		// Ask for another frame
-    	requestAnimationFrame(run);	
-	}
+function run() {
+	var width = Math.round( container.offsetWidth / 2 ),
+		height = container.offsetHeight;
+	// Render the scene
+	renderer.setViewport( 0, 0, width, height );
+	renderer.setScissor( 0, 0, width, height );
+	renderer.enableScissorTest( true );
 
-	function drawSomething(){
+	cameraLeft.aspect = width * 2 / height;
+	cameraLeft.updateProjectionMatrix();
+	cameraLeft.position.set( separation, 0, 3 );
 
-		var planetOrbitGroup = new THREE.Object3D();
-    
-		// Create a group to hold our sun mesh and light
-		var sunGroup = new THREE.Object3D();
+	renderer.render( scene, cameraLeft );
 
-		var SUNMAP = "themes/3dtv/images/lavatile.jpg";
-		var NOISEMAP = "themes/3dtv/images/cloud.png";
-		var uniforms = {
+	renderer.setViewport( width, 0, width, height );
+	renderer.setScissor( width, 0, width, height );
+	renderer.enableScissorTest( true );
 
-				time: { type: "f", value: 1.0 },
-				texture1: { type: "t", value: 0, texture: THREE.ImageUtils.loadTexture( NOISEMAP  ) },
-				texture2: { type: "t", value: 1, texture: THREE.ImageUtils.loadTexture( SUNMAP ) }
+	cameraRight.aspect = width * 2 / height;
+	cameraRight.updateProjectionMatrix();
+	cameraRight.position.set( -separation, 0, 3 );
 
-			};
+	renderer.render( scene, cameraRight );
+	animateSomething();
 
-		uniforms.texture1.texture.wrapS = uniforms.texture1.texture.wrapT = THREE.Repeat;
-		uniforms.texture2.texture.wrapS = uniforms.texture2.texture.wrapT = THREE.Repeat;
+	// Ask for another frame
+	requestAnimationFrame( run );
+}
 
-		var material = new THREE.ShaderMaterial( {
+function drawSomething() {
 
-			uniforms: uniforms,
-			vertexShader: document.getElementById( 'vertexShader' ).textContent,
-			fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+	var planetOrbitGroup = new THREE.Object3D();
 
-		} );
-		
-		// Create our sun mesh
-	    var geometry = new THREE.SphereGeometry(0.5, 64, 64);
-		sunMesh = new THREE.Mesh( geometry, material );
-		
-		// Tuck away the uniforms so that we can animate them over time
-		objects.uniforms = uniforms;
+	// Create a group to hold our sun mesh and light
+	var sunGroup = new THREE.Object3D();
 
-		// Set up a clock to drive the animation
-		objects.clock = new THREE.Clock();
-		
-	    // Create a point light to show off our solar system
-		var light = new THREE.PointLight( 0xffffff, 1.2, 100000 );
-	    
-		sunGroup.add(sunMesh);
-		sunGroup.add(light);
-		sunGroup.position.x = -1;
-		planetOrbitGroup.add(sunGroup);
-		objects.sunGroup = sunGroup;
+	var SUNMAP = "themes/3dtv/images/lavatile.jpg";
+	var NOISEMAP = "themes/3dtv/images/cloud.png";
+	var uniforms = {
+
+		time: { type: "f", value: 1.0 },
+		texture1: { type: "t", value: 0, texture: THREE.ImageUtils.loadTexture( NOISEMAP ) },
+		texture2: { type: "t", value: 1, texture: THREE.ImageUtils.loadTexture( SUNMAP ) }
+
+	};
+
+	uniforms.texture1.texture.wrapS = uniforms.texture1.texture.wrapT = THREE.Repeat;
+	uniforms.texture2.texture.wrapS = uniforms.texture2.texture.wrapT = THREE.Repeat;
+
+	var material = new THREE.ShaderMaterial( {
+
+		uniforms: uniforms,
+		vertexShader: document.getElementById( 'vertexShader' ).textContent,
+		fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+
+	} );
+
+	// Create our sun mesh
+	var geometry = new THREE.SphereGeometry( 0.5, 64, 64 );
+	sunMesh = new THREE.Mesh( geometry, material );
+
+	// Tuck away the uniforms so that we can animate them over time
+	objects.uniforms = uniforms;
+
+	// Set up a clock to drive the animation
+	objects.clock = new THREE.Clock();
+
+	// Create a point light to show off our solar system
+	var light = new THREE.PointLight( 0xffffff, 1.2, 100000 );
+
+	sunGroup.add( sunMesh );
+	sunGroup.add( light );
+	sunGroup.position.x = -1;
+	planetOrbitGroup.add( sunGroup );
+	objects.sunGroup = sunGroup;
 
 
+	var surfaceMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_surface_2048.jpg" );
+	var normalMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_normal_2048.jpg" );
+	var specularMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_specular_2048.jpg" );
 
-
-		var surfaceMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_surface_2048.jpg" );
-		var normalMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_normal_2048.jpg" );
-		var specularMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_specular_2048.jpg" );
-
-		var shader = THREE.ShaderUtils.lib[ "normal" ],
+	var shader = THREE.ShaderUtils.lib[ "normal" ],
 		uniforms = THREE.UniformsUtils.clone( shader.uniforms );
 
-		uniforms[ "tNormal" ].texture = normalMap;
-		uniforms[ "tDiffuse" ].texture = surfaceMap;
-		uniforms[ "tSpecular" ].texture = specularMap;
+	uniforms[ "tNormal" ].texture = normalMap;
+	uniforms[ "tDiffuse" ].texture = surfaceMap;
+	uniforms[ "tSpecular" ].texture = specularMap;
 
-		uniforms[ "enableDiffuse" ].value = true;
-		uniforms[ "enableSpecular" ].value = true;
+	uniforms[ "enableDiffuse" ].value = true;
+	uniforms[ "enableSpecular" ].value = true;
 
-		var shaderMaterial = new THREE.ShaderMaterial({
-			fragmentShader: shader.fragmentShader,
-			vertexShader: shader.vertexShader,
-			uniforms: uniforms,
-			lights: true
-		});
+	var shaderMaterial = new THREE.ShaderMaterial( {
+		fragmentShader: shader.fragmentShader,
+		vertexShader: shader.vertexShader,
+		uniforms: uniforms,
+		lights: true
+	} );
 
-	    var globeGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+	var globeGeometry = new THREE.SphereGeometry( 0.5, 32, 32 );
 
-	    // We'll need these tangents for our shader
-	    globeGeometry.computeTangents();
-	    var globeMesh = new THREE.Mesh( globeGeometry, shaderMaterial ); 
-	    
-	    // Let's work in the tilt
-	    globeMesh.rotation.x = 0.41;
+	// We'll need these tangents for our shader
+	globeGeometry.computeTangents();
+	var globeMesh = new THREE.Mesh( globeGeometry, shaderMaterial );
 
-	    globeMesh.position.x = 1;
+	// Let's work in the tilt
+	globeMesh.rotation.x = 0.41;
 
-	    planetOrbitGroup.add(globeMesh);
-	    objects.globeMesh = globeMesh;
+	globeMesh.position.x = 1;
 
-
-	    // Create our clouds
-		var cloudsMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_clouds_1024.png" );
-		var cloudsMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: cloudsMap, transparent:true } );
-
-	    var cloudsGeometry = new THREE.SphereGeometry(0.505, 32, 32);
-		cloudsMesh = new THREE.Mesh( cloudsGeometry, cloudsMaterial );
-		cloudsMesh.rotation.x = 0.41;
-
-		cloudsMesh.position.x = 1;
-		planetOrbitGroup.add(cloudsMesh);
-		objects.cloudsMesh = cloudsMesh;
+	planetOrbitGroup.add( globeMesh );
+	objects.globeMesh = globeMesh;
 
 
-		scene.add(planetOrbitGroup);
-		objects.planetOrbitGroup = planetOrbitGroup;
+	// Create our clouds
+	var cloudsMap = THREE.ImageUtils.loadTexture( "themes/3dtv/images/earth_clouds_1024.png" );
+	var cloudsMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: cloudsMap, transparent: true } );
+
+	var cloudsGeometry = new THREE.SphereGeometry( 0.505, 32, 32 );
+	cloudsMesh = new THREE.Mesh( cloudsGeometry, cloudsMaterial );
+	cloudsMesh.rotation.x = 0.41;
+
+	cloudsMesh.position.x = 1;
+	planetOrbitGroup.add( cloudsMesh );
+	objects.cloudsMesh = cloudsMesh;
+
+
+	scene.add( planetOrbitGroup );
+	objects.planetOrbitGroup = planetOrbitGroup;
+}
+
+function animateSomething() {
+
+	var delta = objects.clock.getDelta();
+
+	objects.uniforms.time.value += delta;
+
+	objects.sunGroup.rotation.y -= 0.001;
+
+
+	// "I feel the Earth move..."
+	objects.globeMesh.rotation.y += 0.001;
+
+	// "Clouds, too..."
+	objects.cloudsMesh.rotation.y += 0.022;
+
+
+	objects.planetOrbitGroup.rotation.y += 0.02;
+}
+
+function iluminateSomething() {
+	var light = new THREE.PointLight( 0xffffff, 2, 100 );
+	light.position.set( -10, 0, 20 );
+	scene.add( light );
+}
+
+function addKeyHandler() {
+
+
+	document.addEventListener( 'keyup', onKeyUp, false );
+}
+
+function onKeyUp( event ) {
+	event.preventDefault();
+
+	switch ( event.keyCode ) {
+		case 38: //Up
+			separation += incrementation;
+			break;
+		case 40: //Down
+			separation -= incrementation;
+			break;
+		case 39: //Right
+			incrementation *= 1.1;
+			break;
+		case 37:// left
+			incrementation *= 0.9;
+			break;
 	}
+}
 
-	function animateSomething(){
-			
-		var delta = objects.clock.getDelta();
-	
-	 	objects.uniforms.time.value += delta;
-		
-		objects.sunGroup.rotation.y -= 0.001;
-
-
-		// "I feel the Earth move..."
-		objects.globeMesh.rotation.y += 0.001;
-
-		// "Clouds, too..."
-		objects.cloudsMesh.rotation.y += 0.022;
-
-
-		objects.planetOrbitGroup.rotation.y += 0.02;
-	}
-
-	function iluminateSomething(){
-		var light = new THREE.PointLight( 0xffffff, 2, 100);
-		light.position.set(-10, 0, 20);
-		scene.add(light);
-	}
-
-	function addKeyHandler()
-	{
-		
-		
-		document.addEventListener( 'keyup', onKeyUp, false);
-	}
-	
-	function onKeyUp	(event)
-	{
-	    event.preventDefault();
-
-	    switch(event.keyCode){
-	    	case 38: //Up
-	    		separation += incrementation;
-	    		break;
-	    	case 40: //Down
-	    		separation -= incrementation;
-	    		break;
-	    	case 39: //Right
-	    		incrementation *= 1.1;
-	    		break;
-	    	case 37:// left
-	    		incrementation *= 0.9;
-	    		break;
-	    }
-	}	
-	
-	</script>
-	<script id="fragmentShader" type="x-shader/x-fragment">
+</script>
+<script id="fragmentShader" type="x-shader/x-fragment">
 
 			uniform float time;
 
@@ -264,9 +258,10 @@
 				gl_FragColor = temp;
 			}
 
-		</script>
 
-		<script id="vertexShader" type="x-shader/x-vertex">
+</script>
+
+<script id="vertexShader" type="x-shader/x-vertex">
 
 			varying vec2 texCoord;
 
@@ -277,7 +272,8 @@
 				gl_Position = projectionMatrix * mvPosition;
 			}
 
-		</script>
+
+</script>
 
 </head>
 <body onLoad="onLoad();" style="margin: 0px">
