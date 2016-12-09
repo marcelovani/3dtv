@@ -5,16 +5,41 @@
 		#container {
 			background: black;
 		}
+    .dg .property-name {
+      width: 58%;
+    }
+    .dg .slider {
+      position: relative;
+      top: -20px;
+      border-radius: 0;
+      width: 58%;
+      margin-left: 0px;
+      margin-right: 0;
+    }
+    .dg .slider-fg {
+      border-radius: 0;
+    }
+    .slider-fg:after {
+      top: 3px;
+      position: relative;
+    }
+    .dg .has-slider input[type=text] {
+      width: 26%!important;
+      left: 8px;
+    }
 	</style>
 
 	<title>Welcome to WebGL</title>
 
 	<link rel="stylesheet" href="themes/3dtv/css/webglbook.css"/>
+  <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
 	<script src="themes/3dtv/libs/Three.js"></script>
 	<script src="themes/3dtv/libs/RequestAnimationFrame.js"></script>
-	<script src="themes/3dtv/libs/DeviceOrientationControls.js"></script>
-	<script src="themes/3dtv/libs/OrbitControls.js"></script>
-	<script>
+	<!--<script src="themes/3dtv/libs/DeviceOrientationControls.js"></script>
+	<script src="themes/3dtv/libs/OrbitControls.js"></script>-->
+  <script src="../../node_modules/dat.gui/build/dat.gui.js"></script>
+  <script src="../themes/3dtv/gui.js"></script>
+  <script>
 
 		var renderer = null,
 			scene = null,
@@ -111,6 +136,7 @@
 				cube.position.z += 0.01;
 			}
 
+      updateObjectProperties();
 
 			// Ask for another frame
 			requestAnimationFrame( run );
