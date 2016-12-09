@@ -102,6 +102,12 @@
 		// Spin the cube for next frame
 		cube.rotation.y -= 0.01;
 			
+		if (cube.position.z >= 0.7) {
+		       cube.position.z -= 0.01;
+		} else {
+		       cube.position.z += 0.01;
+		}
+
 		// Ask for another frame
     	requestAnimationFrame(run);	
 	}
