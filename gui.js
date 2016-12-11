@@ -14,7 +14,6 @@ function initGui() {
 function updateObjectProperties() {
 	if (guiData && typeof(gui) == 'object' && !gui.closed && guiDataChanged) {
 		separation = guiData.separation;
-		incrementation.fov = guiData.incrementation;
 		guiDataChanged = false;
 	}
 
@@ -31,18 +30,45 @@ function updateGui() {
 	}
 
 	// Do properties
-//	jQuery.each( guiObj, function ( i, controller ) {
-//		var property = controller.property;
-//		if ( !guiDataChanged ) {
-//			console.log(property);
-//		}
-//	} );
+	jQuery.each( gui.__controllers, function ( i, controller ) {
+		var property = controller.property;
+		if ( !guiDataChanged ) {
+			if (typeof(guiData[property]) != 'undefined') {
+				if (controller.object[property] != guiData[property]) {
+					controller.setValue(guiData[property]);
+				}
+			}
+		}
+	} );
 }
 
 function updateGuiDataItem(folder, property, value) {
 	if (guiData[property] != value) {
 		guiData[property] = value;
 		guiDataChanged = true;
+
+		var camera = {
+			separation: separation,
+			l: {
+				position: {
+					x: cameraLeft.position.x,
+					y: cameraLeft.position.y,
+					z: cameraLeft.position.z
+				}
+			},
+			r: {
+				position: {
+					x: cameraRight.position.x,
+					y: cameraRight.position.y,
+					z: cameraRight.position.z
+				}
+			}
+		}
+
+		if (socket.connected) {
+			socket.emit('camera', camera);
+		}
+
 	}
 }
 

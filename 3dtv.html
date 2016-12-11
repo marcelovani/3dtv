@@ -43,6 +43,7 @@
   <!--<script src="themes/3dtv/libs/DeviceOrientationControls.js"></script>
   <script src="themes/3dtv/libs/OrbitControls.js"></script>-->
   <script src="../../node_modules/dat.gui/build/dat.gui.js"></script>
+  <script src="../themes/3dtv/libs/socket.io-1.2.0.js"></script>
   <script src="../themes/3dtv/gui.js"></script>
   <script>
 
@@ -53,8 +54,8 @@
       cube = null,
       separation = -0.04300000000000005,
       incrementation = 0.001,
-      animating = false,
-      socket = null;
+      animating = false;
+    var socket;
 
     function onLoad() {
       // Grab our containers div
@@ -100,9 +101,16 @@
       cube.rotation.x = Math.PI / 5;
       cube.rotation.y = Math.PI / 5;
 
-
       // Add the cube to our scene
       scene.add( cube );
+
+	    // Socket
+		  socket = io('http://127.0.0.1:3000');
+	    socket.on('camera', function (data) {
+		    guiDataChanged = true;
+		    guiData.separation = data.separation;
+		    //separation = data.separation;
+	    });
 
       addKeyHandler();
       // Run our render loop
@@ -172,7 +180,6 @@
           break;
       }
     }
-
   </script>
 
 </head>

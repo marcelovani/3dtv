@@ -1,0 +1,17 @@
+{
+  "name": "3dtv-socket",
+  "version": "0.0.0",
+  "description": "Server/client to send/receive parameters",
+  "main": "index.js",
+  "author": "Marcelo Vani",
+  "private": true,
+  "license": "BSD",
+	"dependencies": {
+		"express": "^4.13.4",
+		"johnny-five": "^0.9.53",
+		"socket.io": "^1.4.6"
+	},
+	"scripts": {
+		"start": "node server.js"
+	}
+}
