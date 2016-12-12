@@ -109,7 +109,7 @@
 	    socket.on('camera', function (data) {
 		    guiDataChanged = true;
 		    guiData.separation = data.separation;
-		    //separation = data.separation;
+		    updateGui();
 	    });
 
       addKeyHandler();
@@ -151,6 +151,9 @@
       }
 
       updateObjectProperties();
+	    if (socket.connected == false) {
+	      updateGui();
+	    }
 
       // Ask for another frame
       requestAnimationFrame( run );
