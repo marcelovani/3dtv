@@ -6,6 +6,9 @@
 <link rel="stylesheet" href="themes/3dtv/css/webglbook.css"/>
 <script src="themes/3dtv/libs/Three.js"></script>
 <script src="themes/3dtv/libs/RequestAnimationFrame.js"></script>
+<script src="../../node_modules/dat.gui/build/dat.gui.js"></script>
+<script src="../themes/3dtv/libs/socket.io-1.2.0.js"></script>
+<script src="../themes/3dtv/gui.js"></script>
 <script>
 
 var renderer = null,
@@ -17,6 +20,7 @@ var renderer = null,
 	separation = -0.04300000000000005,
 	incrementation = 0.001,
 	animating = false;
+var socket;
 
 function onLoad() {
 	// Grab our containers div
@@ -45,6 +49,15 @@ function onLoad() {
 	drawSomething();
 
 	addKeyHandler();
+
+	// Socket
+	socket = io('http:/127.0.0.1:3000');
+	socket.on('camera', function (data) {
+		guiDataChanged = true;
+		guiData.separation = data.separation;
+		updateGui();
+	});
+
 	// Run our render loop
 	run();
 }
@@ -73,6 +86,11 @@ function run() {
 
 	renderer.render( scene, cameraRight );
 	animateSomething();
+
+	updateObjectProperties();
+	if (socket.connected == false) {
+		updateGui();
+	}
 
 	// Ask for another frame
 	requestAnimationFrame( run );
