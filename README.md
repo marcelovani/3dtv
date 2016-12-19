@@ -17,3 +17,6 @@ http://picanteverde.wordpress.com/2013/06/13/3d-side-by-side-with-three-js/
 ```npm start```
 
 Now open your browser on http://127.0.0.1:3000
+
+### Running with specific host/port
+```HOST=192.168.0.12 PORT=3001 npm start```

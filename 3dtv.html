@@ -5,38 +5,12 @@
     #container {
       background: black;
     }
-
-    .dg .property-name {
-      width: 58%;
-    }
-
-    .dg .slider {
-      position: relative;
-      top: -20px;
-      border-radius: 0;
-      width: 58%;
-      margin-left: 0px;
-      margin-right: 0;
-    }
-
-    .dg .slider-fg {
-      border-radius: 0;
-    }
-
-    .slider-fg:after {
-      top: 3px;
-      position: relative;
-    }
-
-    .dg .has-slider input[type=text] {
-      width: 26% !important;
-      left: 8px;
-    }
   </style>
 
   <title>Welcome to WebGL</title>
 
   <link rel="stylesheet" href="themes/3dtv/css/webglbook.css"/>
+  <link rel="stylesheet" href="themes/VR/css/gui.css"/>
   <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
   <script src="themes/3dtv/libs/Three.js"></script>
   <script src="themes/3dtv/libs/RequestAnimationFrame.js"></script>
@@ -45,6 +19,7 @@
   <script src="../../node_modules/dat.gui/build/dat.gui.js"></script>
   <script src="../themes/3dtv/libs/socket.io-1.2.0.js"></script>
   <script src="../themes/3dtv/gui.js"></script>
+  <script src="../themes/3dtv/socketClient.js"></script>
   <script>
 
     var renderer = null,
@@ -55,7 +30,6 @@
       separation = -0.04300000000000005,
       incrementation = 0.001,
       animating = false;
-    var socket;
 
     function onLoad() {
       // Grab our containers div
@@ -105,12 +79,7 @@
       scene.add( cube );
 
 	    // Socket
-		  socket = io('http://127.0.0.1:3000');
-	    socket.on('camera', function (data) {
-		    guiDataChanged = true;
-		    guiData.separation = data.separation;
-		    updateGui();
-	    });
+	    changeSocket();
 
       addKeyHandler();
       // Run our render loop
@@ -188,5 +157,20 @@
 </head>
 <body onLoad="onLoad();" style="margin: 0px">
 <div id="container" style="width:100%; height:100%; position:absolute;"></div>
+<div id="server">
+	<label>IP</label>
+	<span class="host"><input type="text" size="16" name="host" id="host" value=""></span>
+	<label>Port</label>
+	<span class="port"><input type="text" size="4" name="port" id="port" value=""></span>
+</div>
+<script>
+	jQuery('#server .host input' ).blur(function() {
+		changeSocket(jQuery('#server .host input' ).val(), jQuery('#server .port input' ).val());
+	});
+	jQuery('#server .port input' ).blur(function() {
+		changeSocket(jQuery('#server .host input' ).val(), jQuery('#server .port input' ).val());
+	});
+</script>
+
 </body>
 </html>

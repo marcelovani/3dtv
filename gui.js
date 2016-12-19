@@ -8,7 +8,8 @@ function initGui() {
 	};
 	gui = new dat.gui.GUI();
 	gui.remember( object );
-	gui.add( object, 'separation', -0.20, 0.1 ).onChange( function ( v ) {
+	//gui.remember( object.separation );
+	gui.add( object, 'separation', -0.20, 0.1 ).onFinishChange( function ( v ) {
 		updateGuiData( this, v )
 	} );
 }
